@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Registration Form</title>
+</head>
+<body>
+    <h1>User Registration Form</h1>
+    
+    <form id="registrationForm">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username"><br>
+        <span id="usernameError" class="error"></span><br>
+
+        <label for="email">Email:</label><br>
+        <input type="text" id="email"><br>
+        <span id="emailError" class="error"></span><br>
+
+        <label for="password">Password:</label><br>
+        <input type="text" id="password"><br>
+        <span id="passwordError" class="error"></span><br>
+
+        <input type="submit" value="Register">
+    </form>
+
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            validateForm();
+        });
+
+        function validateForm() {
+            var username = document.getElementById('username').value;
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+
+            var usernameError = document.getElementById('usernameError');
+            var emailError = document.getElementById('emailError');
+            var passwordError = document.getElementById('passwordError');
+
+            var valid = true;
+
+            var usernameRegex = /^.{6,}$/;
+            if (!usernameRegex.test(username)) {
+                usernameError.textContent = 'Oops! Invalid username..';
+                valid = false;
+            } else {
+                usernameError.textContent = '';
+            }
+
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                emailError.textContent = 'Invalid email form';
+                valid = false;
+            } else {
+                emailError.textContent = '';
+            }
+
+            var passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+            if (!passwordRegex.test(password)) {
+                passwordError.textContent = 'Your password is not strong enough, do you want to lose your info?';
+                valid = false;
+            } else {
+                passwordError.textContent = '';
+            }
+
+            return valid;
+        }
+    </script>
+</body>
+</html>
