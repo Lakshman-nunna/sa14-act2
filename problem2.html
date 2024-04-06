@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Currency Converter</title>
+</head>
+<body>
+    <h1>Currency Converter</h1>
+    <form id="currencyConverterForm">
+        <label for="fromCurrency">Select the currency you have:</label>
+        <select id="fromCurrency">
+            <option value="JPY">JPY - Japanese Yen</option>
+            <option value="AUD">AUD - Australian Dollar</option>
+            <option value="CAD">CAD - Canadian Dollar</option>
+        </select>
+        <label for="toCurrency">Select the currency you want to convert to:</label>
+        <select id="toCurrency">
+            <option value="JPY">JPY - Japanese Yen</option>
+            <option value="AUD">AUD - Australian Dollar</option>
+            <option value="CAD">CAD - Canadian Dollar</option>
+        </select>
+        <label for="amount">Enter the currency amount:</label>
+        <input type="text" id="amount" >
+        <input type="submit" value="Convert">
+    </form>
+
+    <div id="conversionResult"></div>
+
+    <script>
+        document.getElementById('currencyConverterForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const fromCurrency = document.getElementById('fromCurrency').value;
+            const toCurrency = document.getElementById('toCurrency').value;
+            const amount = document.getElementById('amount').value;
+
+            fetch(`https://v6.exchangerate-api.com/v6/3498b6f519b03538316f2e0a/pair/${fromCurrency}/${toCurrency}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.result === "success") {
+                        const exchangeRate = data.conversion_rate;
+                        const convertedAmount = amount * exchangeRate;
+                        document.getElementById('conversionResult').textContent = `${amount} ${fromCurrency} equals ${convertedAmount.toFixed(2)} ${toCurrency}`;
+                    } else {
+                        document.getElementById('conversionResult').textContent = "Conversion failed. Please try again later.";
+                    }
+                });
+        });
+    </script>
+</body>
+</html>
