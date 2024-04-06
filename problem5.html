@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Animated Image</title>
+    <style>
+        #moveImage {
+            position: absolute;
+            left: 20%;
+            top: 20%;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <img id="moveImage" src="https://th.bing.com/th/id/R.2d31d645a3d5b0aed7ef377fb413cb3d?rik=1gySAvvM9YjZ7A&riu=http%3a%2f%2fpngimg.com%2fuploads%2fsmiley%2fsmiley_PNG43.png&ehk=pomZlnowc8j6c6khxX9vsKjxoZwwa4xNaOAJLyYkqt8%3d&risl=&pid=ImgRaw&r=0" width="50">
+    </div>
+
+    <button id="moveButton">Move</button>
+
+    <script>
+        const moveImage = document.getElementById('moveImage');
+        const moveButton = document.getElementById('moveButton');
+        let intervalId;
+        let currentPosition = 0;
+        let direction = 1; // 1 for right, -1 for left
+
+        moveButton.addEventListener('click', () => {
+            if (intervalId) {
+                clearInterval(intervalId);
+                currentPosition = 0;
+                moveImage.style.left = '20%';
+                moveButton.textContent = 'Move';
+                intervalId = null;
+                return;
+            }
+            moveButton.textContent = 'Stop';
+
+            intervalId = setInterval(() => {
+                currentPosition += direction;
+                moveImage.style.left = (20 + currentPosition) + '%';
+                if (currentPosition >= 100) {
+                    direction = -1;
+                } else if (currentPosition <= 0) {
+                    clearInterval(intervalId);
+                    intervalId = null;
+                    moveButton.textContent = 'Move';
+                }
+            }, 10);
+        });
+    </script>
+</body>
+</html>
