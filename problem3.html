@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Manager</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #taskList {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <h1>Task Manager</h1>
+            
+            <div id="taskList">
+            </div>
+
+            <form id="addTaskForm">
+                <label for="title">Task Title:</label>
+                <input type="text" id="title" required>
+                <label for="details">Task Details:</label>
+                <input type="text" id="details">
+                <button type="submit">Add Task</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('addTaskForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            var taskTitle = document.getElementById('title').value;
+            var taskDetails = document.getElementById('details').value;
+            
+            addOrDeleteTask(taskTitle, taskDetails);
+        });
+
+        function addOrDeleteTask(title, details) {
+            var existingTask = document.querySelector(`div[data-title="${title}"]`);
+            
+            if (existingTask) {
+                existingTask.remove();
+            } else {
+                const taskElement = document.createElement('div');
+                taskElement.dataset.title = title;
+                taskElement.innerHTML = `
+                    <h3>${title}</h3>
+                    <p>${details}</p>
+                    <button onclick="editTask(this)">Edit</button>
+                    <button onclick="addOrDeleteTask('${title}', '${details}')">Delete</button>
+                `;
+                taskElement.style.border = '1px solid #ccc';
+                taskElement.style.padding = '10px';
+                taskElement.style.marginBottom = '10px';
+                document.getElementById('taskList').appendChild(taskElement);
+            }
+        }
+
+        function editTask(buttonElement) {
+            var taskElement = buttonElement.parentElement;
+            var title = taskElement.querySelector('h3').textContent;
+            var details = taskElement.querySelector('p').textContent;
+
+            var newTitle = prompt("Enter new title:", title);
+            var newDetails = prompt("Enter new details:", details);
+
+            if (newTitle !== null && newDetails !== null) {
+                taskElement.querySelector('h3').textContent = newTitle;
+                taskElement.querySelector('p').textContent = newDetails;
+                taskElement.dataset.title = newTitle;
+            }
+        }
+    </script>
+</body>
+</html>
