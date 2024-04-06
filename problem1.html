@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"] {
+            padding: 8px;
+            margin: 0 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 8px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #weather, #forecast {
+            text-align: center;
+        }
+        #forecast hr {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weather Dashboard</h1>
+
+    <form id="weatherForm">
+        <label for="cityInput">City:</label>
+        <input type="text" id="cityInput" required>
+        <button type="submit">Get Weather</button>
+    </form>
+
+    <div id="weatherInfo"></div>
+    <div id="forecastInfo"></div>
+
+    <script>
+        document.getElementById('weatherForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const cityInput = document.getElementById('cityInput').value;
+        
+            const weatherResponse = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${cityInput}&appid=d60945cf8b0c4d9a2d9894a9747ebded&units=metric`);
+            const weatherData = await weatherResponse.json();
+            showWeather(weatherData);
+
+            const forecastResponse = await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${cityInput}&appid=d60945cf8b0c4d9a2d9894a9747ebded&units=metric`);
+            const forecastData = await forecastResponse.json();
+            showForecast(forecastData);
+        });
+
+        function showWeather(weatherData) {
+            const weatherInfo = document.getElementById('weatherInfo');
+            const city = weatherData.name;
+            const temperature = weatherData.main.temp;
+            const description = weatherData.weather[0].description;
+            const humidity = weatherData.main.humidity;
+
+            weatherInfo.innerHTML = `<p>Weather in ${city}: ${temperature}°C, ${description}, Humidity: ${humidity}%</p>`;
+        }
+
+        function showForecast(forecastData) {
+            const forecastInfo = document.getElementById('forecastInfo');
+            forecastInfo.innerHTML = '<hr><h2>5-Day Forecast</h2>';
+            const forecasts = forecastData.list.filter((item, index) => index % 8 === 0);
+            forecasts.forEach(forecast => {
+                const date = new Date(forecast.dt * 1000).toLocaleDateString();
+                const temperature = forecast.main.temp;
+                const description = forecast.weather[0].description;
+                forecastInfo.innerHTML += `<p>${date}: ${temperature}°C, ${description}</p>`;
+            });
+        }
+    </script>
+</body>
+</html>
